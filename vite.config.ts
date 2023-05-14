@@ -19,4 +19,7 @@ export default defineConfig({
       import React from 'react'  
     `,
   },
+  build: {
+    target: ["chrome90", "edge90", "firefox90", "safari15"],
+  },
 });
