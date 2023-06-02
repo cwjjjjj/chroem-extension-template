@@ -6,8 +6,8 @@
     "48": "logo.png",
     "128": "logo.png"
   },
-  "name": "side-panel",
-  "version": "1.0.8",
+  "name": "template",
+  "version": "0.0.0",
   "action": { "default_popup": "index.html" },
   "content_scripts": [
     {
