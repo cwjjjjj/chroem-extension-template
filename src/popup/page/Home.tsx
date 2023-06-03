@@ -6,16 +6,14 @@ import GridLayout, {
 import V2exHotList from "../components/V2exHotList";
 
 const layout = [
-  { i: "a", x: 0, y: 0, w: 1, h: 2 },
-  { i: "b", x: 1, y: 0, w: 3, h: 6, minW: 2, maxW: 4, minH: 6 },
-  { i: "c", x: 4, y: 0, w: 1, h: 2 },
+  { i: "a", x: 0, y: 0, w: 4, h: 2 },
+  { i: "b", x: 0, y: 1, w: 2, h: 6, minW: 2, maxW: 4, minH: 6 },
+  { i: "c", x: 0, y: 2, w: 4, h: 10, minH: 6 },
 ];
 
 export default function Home() {
   return (
     <div className="p-[10px] overflow-auto">
-      <V2exHotList />
-
       <GridLayout
         className="layout"
         layout={layout}
@@ -29,9 +27,9 @@ export default function Home() {
         <div key="b" className=" bg-[orange]">
           <Memorandum />
         </div>
-        {/* <div key="c" className=" bg-[green]">
+        <div key="c" className=" bg-[green]">
           <V2exHotList />
-        </div> */}
+        </div>
       </GridLayout>
     </div>
   );

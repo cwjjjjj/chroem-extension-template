@@ -28,6 +28,9 @@ export default function V2ex() {
     <div
       className="grid gap-[10px]"
       css={css`
+        height: 100%;
+        overflow: auto;
+
         .header {
           height: 20px;
 
