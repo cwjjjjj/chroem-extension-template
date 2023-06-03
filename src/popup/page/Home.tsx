@@ -11,6 +11,8 @@ const layout = [
 export default function Home() {
   return (
     <div className="p-[10px] overflow-auto">
+      <Memorandum />
+
       <GridLayout
         className="layout"
         layout={layout}
@@ -21,9 +23,9 @@ export default function Home() {
         <div key="a" className=" bg-[red]">
           <Search />
         </div>
-        <div key="b" className=" bg-[orange]">
+        {/* <div key="b" className=" bg-[orange]">
           <Memorandum />
-        </div>
+        </div> */}
         <div key="c" className=" bg-[green]">
           c
         </div>

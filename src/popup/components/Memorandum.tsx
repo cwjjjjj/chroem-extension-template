@@ -1,10 +1,11 @@
-import { Button, CheckList, Input } from "antd-mobile";
-import { HTMLAttributes, useMemo } from "react";
+import { Button, CheckList, Input, Popover } from "antd-mobile";
+import { HTMLAttributes, useMemo, useState } from "react";
 import MemorandumItem from "./MemorandumItem";
 import { useRecoilState } from "recoil";
 import { memorandumListState } from "../globalState";
-import { cloneDeep } from "lodash";
+import { cloneDeep, set } from "lodash";
 import { css } from "@emotion/react";
+import { nanoid } from "nanoid";
 
 export interface MemorandumProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -19,6 +20,7 @@ export interface MemorandumItem {
 export default function Memorandum({ ...props }: MemorandumProps) {
   const [memorandumList, setMemorandumList] =
     useRecoilState(memorandumListState);
+  const [newTask, setNewTask] = useState<string>();
 
   const memorandumListValue = useMemo(
     () =>
@@ -28,7 +30,7 @@ export default function Memorandum({ ...props }: MemorandumProps) {
     [memorandumList]
   );
 
-  const handleChange = (value: string[]) => {
+  const handleChangeState = (value: string[]) => {
     console.log("change", value);
     const preMemorandumList = cloneDeep(memorandumList);
     const newMemorandumList = preMemorandumList.map((item) => {
@@ -43,6 +45,31 @@ export default function Memorandum({ ...props }: MemorandumProps) {
     setMemorandumList(newMemorandumList);
   };
 
+  const handleCreateItem = (task?: string) => {
+    if (!task) {
+      return;
+    }
+    const newMemorandumList = cloneDeep(memorandumList);
+    newMemorandumList.push({
+      task,
+      state: "todo",
+      id: nanoid(),
+    });
+    setMemorandumList(newMemorandumList);
+  };
+
+  const handleDelete = (taskId: string) => {
+    if (!taskId) {
+      return;
+    }
+    const MemorandumList = cloneDeep(memorandumList);
+    const newMemorandumList = MemorandumList.filter(
+      (item) => item.id !== taskId
+    );
+    console.log("new", newMemorandumList);
+    setMemorandumList(newMemorandumList);
+  };
+
   return (
     <div
       {...props}
@@ -50,10 +77,15 @@ export default function Memorandum({ ...props }: MemorandumProps) {
         height: 100%;
       `}
     >
-      <CheckList multiple value={memorandumListValue} onChange={handleChange}>
+      <h4>备忘录</h4>
+      <CheckList
+        multiple
+        value={memorandumListValue}
+        onChange={handleChangeState}
+      >
         {memorandumList.map((item) => (
           <CheckList.Item value={item.id} key={item.id}>
-            <MemorandumItem data={item} />
+            <MemorandumItem data={item} onDelete={handleDelete} />
           </CheckList.Item>
         ))}
       </CheckList>
@@ -61,10 +93,16 @@ export default function Memorandum({ ...props }: MemorandumProps) {
       <section>
         <Input
           placeholder="新增代办事项"
-          //   onBlur={(e) => {
-          //     console.log(e.target.value);
-          //   }}
-          //   onEnterPress={(e) => console.log(e.target.value)}
+          value={newTask}
+          onChange={setNewTask}
+          onBlur={(e) => {
+            handleCreateItem(newTask);
+            setNewTask("");
+          }}
+          onEnterPress={(e) => {
+            handleCreateItem(newTask);
+            setNewTask("");
+          }}
         />
       </section>
     </div>
