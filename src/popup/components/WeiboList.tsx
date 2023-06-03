@@ -27,6 +27,9 @@ export default function WeiboList() {
   return (
     <div
       css={css`
+        height: 100%;
+        overflow: auto;
+
         .icon {
           width: 20px;
           height: 20px;
