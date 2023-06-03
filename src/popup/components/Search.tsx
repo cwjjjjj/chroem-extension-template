@@ -120,11 +120,7 @@ export default function Search({ ...props }: SearchProps) {
           <div className="searchbar-center">
             <div className="searchbar-input-spacer"></div>
 
-            <input
-              className="searchbar-input"
-              title="Search"
-              placeholder="Search Google"
-            />
+            <input className="searchbar-input" title="Search" />
           </div>
 
           <div className="searchbar-right"></div>
