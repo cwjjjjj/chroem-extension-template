@@ -35,7 +35,6 @@ export default function V2exPost({ data, ...props }: V2exPostProps) {
         .title {
           width: 100%;
           font-weight: 700;
-          width: 100%;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;

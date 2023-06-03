@@ -4,6 +4,7 @@ import GridLayout, {
   Responsive as ResponsiveGridLayout,
 } from "react-grid-layout";
 import V2exHotList from "../components/V2exHotList";
+import WeiboList from "../components/WeiboList";
 
 const layout = [
   { i: "a", x: 0, y: 0, w: 4, h: 2 },
@@ -14,6 +15,7 @@ const layout = [
 export default function Home() {
   return (
     <div className="p-[10px] overflow-auto">
+      <WeiboList />
       <GridLayout
         className="layout"
         layout={layout}

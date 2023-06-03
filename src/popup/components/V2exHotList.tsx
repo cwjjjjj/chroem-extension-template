@@ -3,7 +3,7 @@ import { get } from "../../utils";
 import { V2exPost as V2exPostType } from "../types";
 import V2exPost from "./V2exPost";
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const V2ex_HOTTEST_LIST = "https://www.v2ex.com/api/topics/hot.json";
 
@@ -15,13 +15,19 @@ export default function V2ex() {
   const [currentTab, setCurrentTab] = useState<Tab>("hottest");
 
   const { data: hottestList } = useQuery<V2exPostType[]>(
-    [V2ex_HOTTEST_LIST],
-    async () => get(V2ex_HOTTEST_LIST).then((res) => res.data)
+    [V2ex_HOTTEST_LIST, currentTab],
+    async () => get(V2ex_HOTTEST_LIST).then((res) => res.data),
+    {
+      enabled: currentTab === "hottest",
+    }
   );
 
   const { data: latestList } = useQuery<V2exPostType[]>(
-    [V2ex_LATEST_LIST],
-    async () => get(V2ex_LATEST_LIST).then((res) => res.data)
+    [V2ex_LATEST_LIST, currentTab],
+    async () => get(V2ex_LATEST_LIST).then((res) => res.data),
+    {
+      enabled: currentTab === "latest",
+    }
   );
 
   return (
