@@ -1,6 +1,9 @@
 import { css } from "@emotion/react";
-import { HTMLAttributes, useState } from "react";
-import { CloseOutline } from "antd-mobile-icons";
+import { HTMLAttributes, useEffect, useState } from "react";
+import { AddSquareOutline, CloseOutline } from "antd-mobile-icons";
+import { getCurrentTab } from "../../utils/getCurrentTab";
+import { useRecoilState } from "recoil";
+import { currentTabState } from "../globalState";
 
 export interface WebIconType {
   url: string;
@@ -9,20 +12,40 @@ export interface WebIconType {
 }
 
 export interface WebIconProps extends HTMLAttributes<HTMLDivElement> {
-  data: WebIconType;
+  data?: WebIconType;
+  add?: boolean;
 }
 
-export default function WebIcon({ data, ...props }: WebIconProps) {
+export default function WebIcon({ data, add = false, ...props }: WebIconProps) {
   const [showCloseIcon, setShowCloseIcon] = useState(false);
-  if (!data) {
-    return null;
-  }
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
+
+  useEffect(() => {
+    console.log("currentTab", currentTab);
+  }, []);
+
+  const handleClick = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    if (add) {
+      const currentTab = await getCurrentTab();
+      console.log("currentTab", currentTab);
+    }
+    if (!add && data) {
+      window.open(data.url);
+    }
+  };
 
   return (
     <div
       css={css`
-        height: 44px;
-        width: 44px;
+        min-height: 44px;
+        /* max-height: 60px; */
+        min-width: 44px;
+        /* max-width: 60px; */
+        height: 100%;
+        flex: 1;
         cursor: pointer;
         position: relative;
         border-radius: 12px;
@@ -30,6 +53,20 @@ export default function WebIcon({ data, ...props }: WebIconProps) {
         display: flex;
         align-items: center;
         justify-content: center;
+
+        &:hover .addIcon::after {
+          content: "固定当页";
+          position: absolute;
+          left: 50%;
+          top: 0;
+          white-space: nowrap;
+          transform: translate(-50%, 0);
+          color: white;
+          z-index: 10;
+          background-color: rgba(0, 0, 0, 0.6);
+          border-radius: 4px;
+          padding: 2px 4px;
+        }
 
         .favIconImg {
           height: 20px;
@@ -53,9 +90,16 @@ export default function WebIcon({ data, ...props }: WebIconProps) {
       {...props}
       onMouseEnter={() => setShowCloseIcon(true)}
       onMouseLeave={() => setShowCloseIcon(false)}
+      onClick={handleClick}
     >
-      <img src={data.favIconUrl} alt="icon" className="favIconImg" />
-      {showCloseIcon && <CloseOutline className="closeIcon" />}
+      {add ? (
+        <div className="addIcon">
+          <AddSquareOutline className="favIconImg" />
+        </div>
+      ) : (
+        <img src={data?.favIconUrl} alt="icon" className="favIconImg" />
+      )}
+      {!add && showCloseIcon && <CloseOutline className="closeIcon" />}
     </div>
   );
 }

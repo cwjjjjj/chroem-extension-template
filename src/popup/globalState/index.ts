@@ -1,5 +1,7 @@
 import { atom } from "recoil";
 import { MemorandumItem } from "../components/Memorandum";
+import { Tabs } from "webextension-polyfill/namespaces/tabs";
+import { getCurrentTab } from "../../utils/getCurrentTab";
 
 const mockData: MemorandumItem[] = [
   {
@@ -17,4 +19,10 @@ const mockData: MemorandumItem[] = [
 export const memorandumListState = atom<MemorandumItem[]>({
   key: "memorandumListState",
   default: mockData,
+});
+
+export const currentTabState = atom<Tabs.Tab | undefined>({
+  key: "currentTabState",
+  default: undefined,
+  // getCurrentTab()
 });

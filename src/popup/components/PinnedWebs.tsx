@@ -62,6 +62,7 @@ export default function PinnedWebs(props: PinnedWebsProps) {
       {DEFAULT_PINNED_TABS.map((item) => (
         <WebIcon key={item.id} data={item} />
       ))}
+      <WebIcon add />
     </div>
   );
 }
