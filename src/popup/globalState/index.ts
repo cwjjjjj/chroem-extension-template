@@ -37,7 +37,7 @@ export const DEFAULT_PINNED_TABS: WebIconType[] = [
   },
 ];
 
-const mockData: MemorandumItem[] = [
+export const DEFAULT_MEMORANDUM_LIST: MemorandumItem[] = [
   {
     task: "task1",
     state: "todo",
@@ -52,7 +52,7 @@ const mockData: MemorandumItem[] = [
 
 export const memorandumListState = atom<MemorandumItem[]>({
   key: "memorandumListState",
-  default: mockData,
+  default: DEFAULT_MEMORANDUM_LIST,
 });
 
 export const currentTabState = atom<Tabs.Tab | undefined>({

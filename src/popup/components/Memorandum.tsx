@@ -6,6 +6,7 @@ import { memorandumListState } from "../globalState";
 import { cloneDeep, set } from "lodash";
 import { css } from "@emotion/react";
 import { nanoid } from "nanoid";
+import Browser from "webextension-polyfill";
 
 export interface MemorandumProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -21,6 +22,16 @@ export default function Memorandum({ ...props }: MemorandumProps) {
   const [memorandumList, setMemorandumList] =
     useRecoilState(memorandumListState);
   const [newTask, setNewTask] = useState<string>();
+
+  const setMemorandumListWithStorage = (
+    newMemorandumList: MemorandumItem[]
+  ) => {
+    if (!newMemorandumList) {
+      return;
+    }
+    setMemorandumList(newMemorandumList);
+    Browser.storage.sync.set({ memorandumList: newMemorandumList });
+  };
 
   const memorandumListValue = useMemo(
     () =>
@@ -42,7 +53,7 @@ export default function Memorandum({ ...props }: MemorandumProps) {
       return item;
     });
     console.log("newMemorandumList", newMemorandumList);
-    setMemorandumList(newMemorandumList);
+    setMemorandumListWithStorage(newMemorandumList);
   };
 
   const handleCreateItem = (task?: string) => {
@@ -55,7 +66,7 @@ export default function Memorandum({ ...props }: MemorandumProps) {
       state: "todo",
       id: nanoid(),
     });
-    setMemorandumList(newMemorandumList);
+    setMemorandumListWithStorage(newMemorandumList);
   };
 
   const handleDelete = (taskId: string) => {

@@ -9,7 +9,7 @@ import PinnedIcons from "../components/PinnedWebs";
 import { useEffect, useRef } from "react";
 import Browser from "webextension-polyfill";
 import { useRecoilState } from "recoil";
-import { pinnedWebsState } from "../globalState";
+import { memorandumListState, pinnedWebsState } from "../globalState";
 
 const layout = [
   { i: "a", x: 0, y: 0, w: 4, h: 2 },
@@ -22,19 +22,25 @@ const layout = [
 export default function Home() {
   const isFirstRef = useRef(true);
   const [pinnedWebs, setPinnedWebs] = useRecoilState(pinnedWebsState);
+  const [memorandumList, setMemorandumList] =
+    useRecoilState(memorandumListState);
 
   useEffect(() => {
     if (isFirstRef?.current) {
       Browser.storage.sync.get(["pinnedWebs"]).then((res) => {
-        console.log("res.pinnedWebs", res.pinnedWebs);
         setPinnedWebs(res.pinnedWebs);
+      });
+      Browser.storage.sync.get(["memorandumList"]).then((res) => {
+        setMemorandumList(res.memorandumList);
       });
       isFirstRef.current = false;
     } else {
       Browser.storage.onChanged.addListener((res) => {
         if (res?.pinnedWebs) {
-          console.log("res?.pinnedWebs?.newValue", res?.pinnedWebs?.newValue);
           setPinnedWebs(res?.pinnedWebs?.newValue);
+        }
+        if (res?.memorandumList) {
+          setMemorandumList(res?.memorandumList?.newValue);
         }
       });
     }
