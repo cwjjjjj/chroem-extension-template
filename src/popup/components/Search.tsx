@@ -1,12 +1,94 @@
 import { css } from "@emotion/react";
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useCallback, useState } from "react";
+import baiduIcon from "../assets/baiduIcon.png";
+import googleIcon from "../assets/googleIcon.png";
+import bingIcon from "../assets/bingIcon.png";
+import { Popover } from "antd-mobile";
+import { Action } from "antd-mobile/es/components/popover";
+import Browser from "webextension-polyfill";
 
 export interface SearchProps extends HTMLAttributes<HTMLDivElement> {}
 
+export type SearchEngine = Record<string, string>;
+
+export const SEARCH_ENGINE = {
+  Google: "https://www.google.com/search?q=",
+  Baidu: "https://www.baidu.com/s?wd=",
+  Bing: "https://www.bing.com/search?q=",
+};
+
+const SearchEngineList = Object.entries(SEARCH_ENGINE).map(
+  ([searchEngine, url]) => {
+    return {
+      searchEngine,
+      url,
+    };
+  }
+);
+const SearchEngineListLength = SearchEngineList.length;
+
 export default function Search({ ...props }: SearchProps) {
+  const [isShowPicker, setIsShowPicker] = useState(false);
+  const [currentHoverItemIndex, setCurrentHoverItemIndex] = useState(0);
+  const [inputValue, setInputValue] = useState<string>();
+
+  const currentSearchIcon = useCallback((searchEngine: string) => {
+    if (!searchEngine) {
+      return <img src={baiduIcon} alt="baiduIcon" />;
+    }
+    return searchEngine === "Google" ? (
+      <img src={googleIcon} alt="googleIcon" />
+    ) : searchEngine === "Baidu" ? (
+      <img src={baiduIcon} alt="baiduIcon" />
+    ) : searchEngine === "Bing" ? (
+      <img src={bingIcon} alt="bingIcon" />
+    ) : null;
+  }, []);
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      // @ts-ignore
+      handleSearch(inputValue, SearchEngineList[currentHoverItemIndex].url);
+    }
+    if (e.key === "Escape") {
+      setIsShowPicker(false);
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setCurrentHoverItemIndex((prev) =>
+        prev - 1 < 0 ? SearchEngineListLength - 1 : prev - 1
+      );
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!isShowPicker) {
+        setIsShowPicker(true);
+      }
+      setCurrentHoverItemIndex((prev) =>
+        prev + 1 > SearchEngineListLength - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  const handleSearch = (value?: string, searchEngineUrl?: string) => {
+    setInputValue("");
+    setIsShowPicker(false);
+    if (!inputValue) {
+      return;
+    }
+  };
+
   return (
     <div
       css={css`
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+
         .searchbar {
           font-size: 14px;
           font-family: arial, sans-serif;
@@ -17,7 +99,7 @@ export default function Search({ ...props }: SearchProps) {
           border: 1px solid #dfe1e5;
           box-shadow: none;
           border-radius: 24px;
-          margin: 0 auto;
+          width: 100%;
         }
 
         .searchbar:hover {
@@ -99,15 +181,84 @@ export default function Search({ ...props }: SearchProps) {
           flex-direction: row;
         }
 
-        .searchbar-clear-icon {
-          margin-right: 12px;
+        .picker {
+          width: 141px;
+          position: absolute;
+          background-color: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(17.5px);
+          border-radius: 12px;
+          padding: 10px 0;
+          z-index: 11;
+          left: 40px;
+        }
+
+        .picker-item {
+          height: 32px;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 20px 1fr;
+          justify-content: center;
+          align-items: center;
+          padding: 0 15px;
+          gap: 8px;
+
+          &-active {
+            background-color: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+          }
         }
       `}
       {...props}
     >
+      {isShowPicker && (
+        <div className="picker">
+          {SearchEngineList.map(({ searchEngine, url }, index) => {
+            return (
+              <div
+                key={searchEngine}
+                className={`picker-item ${
+                  index === currentHoverItemIndex ? "picker-item-active" : ""
+                }`}
+                onMouseEnter={() => {
+                  setCurrentHoverItemIndex(index);
+                }}
+                onClick={() => {
+                  handleSearch(
+                    inputValue,
+                    SearchEngineList[currentHoverItemIndex].url
+                  );
+                }}
+              >
+                {/* <span className="search-value">{inputValue}</span> */}
+                {currentSearchIcon(searchEngine)}
+                <span className="search-engine-name">{searchEngine}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
       <div className="searchbar">
         <div className="searchbar-wrapper">
-          <div className="searchbar-left">
+          <div
+            className="searchbar-left"
+            onClick={() => {
+              setIsShowPicker(true);
+            }}
+          >
+            <img src={googleIcon} />
+          </div>
+
+          <div className="searchbar-center">
+            <div className="searchbar-input-spacer"></div>
+            <input
+              className="searchbar-input"
+              title="Search"
+              placeholder="请输入查询内容"
+              onKeyUp={handleKeyUp}
+            />
+          </div>
+
+          <div className="searchbar-right">
             <div className="search-icon-wrapper">
               <span className="search-icon searchbar-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -116,14 +267,6 @@ export default function Search({ ...props }: SearchProps) {
               </span>
             </div>
           </div>
-
-          <div className="searchbar-center">
-            <div className="searchbar-input-spacer"></div>
-
-            <input className="searchbar-input" title="Search" />
-          </div>
-
-          <div className="searchbar-right"></div>
         </div>
       </div>
     </div>

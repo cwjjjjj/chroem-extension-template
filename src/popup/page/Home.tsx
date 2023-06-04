@@ -6,17 +6,19 @@ import GridLayout, {
 import V2exHotList from "../components/V2exHotList";
 import WeiboList from "../components/WeiboList";
 import PinnedIcons from "../components/PinnedWebs";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Browser from "webextension-polyfill";
 import { useRecoilState } from "recoil";
 import { memorandumListState, pinnedWebsState } from "../globalState";
+import { css } from "@emotion/react";
 
 const layout = [
-  { i: "a", x: 0, y: 0, w: 4, h: 2 },
+  { i: "a", x: 0, y: 0, w: 4, h: 2, minW: 2, minH: 2 },
   { i: "b", x: 0, y: 1, w: 2, h: 6, minW: 2, maxW: 4, minH: 6 },
   { i: "c", x: 0, y: 2, w: 4, h: 10, minH: 6 },
   { i: "d", x: 2, y: 1, w: 2, h: 6 },
   { i: "e", x: 0, y: 0, w: 4, h: 2 },
+  // { i: "f", x: 0, y: 0, w: 4, h: 10 },
 ];
 
 export default function Home() {
@@ -24,6 +26,7 @@ export default function Home() {
   const [pinnedWebs, setPinnedWebs] = useRecoilState(pinnedWebsState);
   const [memorandumList, setMemorandumList] =
     useRecoilState(memorandumListState);
+  // const [customUrl, setCustomUrl] = useState<string>("");
 
   useEffect(() => {
     if (isFirstRef?.current) {
@@ -69,6 +72,22 @@ export default function Home() {
         <div key="e" className=" bg-[#35dac1]">
           <PinnedIcons />
         </div>
+        {/* <div key="f" className=" bg-[#a0b3d7] h-full w-full overflow-auto">
+          <input
+            type="text"
+            value={customUrl}
+            onChange={(e) => {
+              setCustomUrl(e.target.value);
+            }}
+          />
+          <iframe
+            src={customUrl}
+            css={css`
+              width: 100%;
+              height: 100%;
+            `}
+          />
+        </div> */}
       </GridLayout>
     </div>
   );
