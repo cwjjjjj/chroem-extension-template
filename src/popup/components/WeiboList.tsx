@@ -6,10 +6,13 @@ import { WeiboPost as WeiboPostType } from "../types";
 import WeiboPost from "./WeiboPost";
 import { UndoOutline } from "antd-mobile-icons";
 import { Toast } from "antd-mobile";
+import { HTMLAttributes } from "react";
 
 const WEIBO_HOT_SEARCH = "https://weibo.com/ajax/side/hotSearch";
 
-export default function WeiboList() {
+export interface WeiboListProps extends HTMLAttributes<HTMLDivElement> {}
+
+export default function WeiboList(props: WeiboListProps) {
   const { data, refetch, isLoading, isFetching } = useQuery<WeiboPostType[]>(
     [WEIBO_HOT_SEARCH],
     async () =>
@@ -36,6 +39,7 @@ export default function WeiboList() {
           object-fit: contain;
         }
       `}
+      {...props}
     >
       <header className=" grid grid-cols-[20px_1fr_14px_55px] items-center gap-[4px] mb-[10px]">
         <img src={weibo} alt="weiboIcon" className="icon" />
@@ -67,7 +71,6 @@ export default function WeiboList() {
 
       <main className="grid gap-[8px]">
         {data?.map((item) => {
-          console.log("item", item);
           return <WeiboPost key={item.mid} data={item} />;
         })}
       </main>

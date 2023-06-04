@@ -5,12 +5,14 @@ import GridLayout, {
 } from "react-grid-layout";
 import V2exHotList from "../components/V2exHotList";
 import WeiboList from "../components/WeiboList";
+import PinnedIcons from "../components/PinnedWebs";
 
 const layout = [
   { i: "a", x: 0, y: 0, w: 4, h: 2 },
   { i: "b", x: 0, y: 1, w: 2, h: 6, minW: 2, maxW: 4, minH: 6 },
   { i: "c", x: 0, y: 2, w: 4, h: 10, minH: 6 },
   { i: "d", x: 2, y: 1, w: 2, h: 6 },
+  { i: "e", x: 0, y: 0, w: 4, h: 2 },
 ];
 
 export default function Home() {
@@ -34,6 +36,9 @@ export default function Home() {
         </div>
         <div key="d" className=" bg-[pink]">
           <WeiboList />
+        </div>
+        <div key="e" className=" bg-[#35dac1]">
+          <PinnedIcons />
         </div>
       </GridLayout>
     </div>

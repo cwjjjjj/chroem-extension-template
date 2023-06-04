@@ -3,7 +3,7 @@ import { get } from "../../utils";
 import { V2exPost as V2exPostType } from "../types";
 import V2exPost from "./V2exPost";
 import { css } from "@emotion/react";
-import { useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 
 const V2ex_HOTTEST_LIST = "https://www.v2ex.com/api/topics/hot.json";
 
@@ -11,7 +11,9 @@ const V2ex_LATEST_LIST = "https://www.v2ex.com/api/topics/latest.json";
 
 type Tab = "hottest" | "latest";
 
-export default function V2ex() {
+export interface V2exProps extends HTMLAttributes<HTMLDivElement> {}
+
+export default function V2ex(props: V2exProps) {
   const [currentTab, setCurrentTab] = useState<Tab>("hottest");
 
   const { data: hottestList } = useQuery<V2exPostType[]>(
@@ -50,6 +52,7 @@ export default function V2ex() {
           color: #1890ff;
         }
       `}
+      {...props}
     >
       <header className="header flex justify-between">
         <img src="https://www.v2ex.com/static/img/v2ex@2x.png" alt="" />
