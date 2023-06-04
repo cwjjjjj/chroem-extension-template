@@ -33,7 +33,7 @@ export default function WebIcon({ data, add = false, ...props }: WebIconProps) {
       return;
     }
     setPinnedWebs(newPinnedWebs);
-    Browser.storage.local.set({ pinnedWebs: newPinnedWebs });
+    Browser.storage.sync.set({ pinnedWebs: newPinnedWebs });
   };
 
   const handleAdd = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -76,7 +76,7 @@ export default function WebIcon({ data, add = false, ...props }: WebIconProps) {
     <div
       css={css`
         min-height: 44px;
-        /* max-height: 60px; */
+        max-height: 60px;
         min-width: 44px;
         /* max-width: 60px; */
         height: 100%;

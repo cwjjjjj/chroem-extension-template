@@ -10,6 +10,6 @@ Browser.runtime.onInstalled.addListener(async (detail) => {
 
   // 首次安装
   if (detail.reason === "install") {
-    Browser.storage.local.set({ pinnedWebs: DEFAULT_PINNED_TABS });
+    Browser.storage.sync.set({ pinnedWebs: DEFAULT_PINNED_TABS });
   }
 });

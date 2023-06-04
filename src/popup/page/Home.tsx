@@ -25,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isFirstRef?.current) {
-      Browser.storage.local.get(["pinnedWebs"]).then((res) => {
+      Browser.storage.sync.get(["pinnedWebs"]).then((res) => {
         console.log("res.pinnedWebs", res.pinnedWebs);
         setPinnedWebs(res.pinnedWebs);
       });
